@@ -3,8 +3,8 @@ package model.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Department implements Serializable{
-    
+public class Department implements Serializable {
+
     //private static final long serialVersionUID = 1L; Somente se precisar para essa versão 8
     private Integer id;
     private String name;
@@ -63,10 +63,4 @@ public class Department implements Serializable{
         return "Department [" + "id=" + id + ", name=" + name + ']';
     }
 
-    
-    
-    
-    
-    
-    
 }

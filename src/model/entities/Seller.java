@@ -5,15 +5,14 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Seller implements Serializable {
-    
+
     //private static final long serialVersionUID = 1L;
-    
     private Integer id;
     private String name;
     private String email;
     private Date birthDate;
     private Double salary;
-    
+
     private Department department;
 
     public Seller() {
@@ -105,6 +104,5 @@ public class Seller implements Serializable {
     public String toString() {
         return "Seller[ " + "id=" + id + ", name=" + name + ", email=" + email + ", birthDate=" + birthDate + ", salary=" + salary + ", department=" + department + " ]";
     }
-    
-    
+
 }
