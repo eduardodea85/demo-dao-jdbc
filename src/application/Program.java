@@ -22,9 +22,9 @@ public class Program {
         
         System.out.println("\n=== Test 2: seller findByDepartment ====");
         Department department = new Department(2, null);
-        List<Seller> list = sellerDao.findByDepartment(department);
-        for (Seller obj : list) {
-            System.out.println(obj);
+        List<Seller> list = sellerDao.findByDepartment(department);//Declaro list de Seller chamando ela de list e essa lista vai receber o sellerDao.findById, pasando department como argumento. Por isso antes de chamar essa lista, preciso declarar essa lista acima como new Department colocando o id.        
+        for (Seller obj : list) {//Pra cada Seller obj, na minha lista list...
+            System.out.println(obj);//mando imprimir obj
         }
     }
     
