@@ -27,45 +27,68 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void insert(Seller obj) {
-        PreparedStatement st = null;
-        try {
+        PreparedStatement st = null;//Declarar PreparedStatement e começar com null.
+        try { //Começar o try montanto o Statement
             st = conn.prepareStatement(
                     "INSERT INTO seller "
                     + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
                     + "VALUES "
                     + "(?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS);
+                    Statement.RETURN_GENERATED_KEYS);//Na hora de fazer o PreparedStatement, colocar esse comando para ele retornar o id do vendedor inserido.
             
+            //Configurar os ? do SQL Query dos obj
             st.setString(1, obj.getName());
             st.setString(2, obj.getEmail());
-            st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+            st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));//Java sql e não util
             st.setDouble(4, obj.getBaseSalary());
             st.setInt(5, obj.getDepartment().getId());
             
-            int rowsAffected = st.executeUpdate();
+            int rowsAffected = st.executeUpdate();//fazer esse comando para executar a query
             
-            if (rowsAffected > 0) {
-                ResultSet rs = st.getGeneratedKeys();
-                if (rs.next()) {
-                    int id = rs.getInt(1);
-                    obj.setId(id);
+            if (rowsAffected > 0) {//Fazer o teste se inseriu. Se a linha alterada for maior que 0, significa que inseriu.
+                ResultSet rs = st.getGeneratedKeys();//Se inseriu eu declaro uma ResultSet chamando de rs e vou chamar o st.getGeneratedKeys.
+                if (rs.next()) {//Nesse caso vou fazer apenas 1 if, poque estou inserindo apenas um dado.
+                    int id = rs.getInt(1);//Se existir, vou pegar o valor do id gerado e vou colocar na posição 1 que é a primeira coluna das chaves
+                    obj.setId(id);//Peguei o id gerado e vou atribuir dentro do meu objeto obj para ele já fique com o novo id.
                 }
-                DB.closeResultSet(rs);
+                DB.closeResultSet(rs);//Fechando o recurso rs usado.
             }
-            else {
-                throw new DbException("Unexpected error! No rows affected!");
+            else {//Se não tiver uma linha alterada, lanço uma exceção
+                throw new DbException("Unexpected error! No rows affected!");//Erro inesperado, nenhuma linha foi afetada.
             }           
-        } catch (SQLException e) {
+        } catch (SQLException e) {//Se aconteceu alguma exceção, lanço a minha exceção personalizada.
             throw new DbException(e.getMessage());
         }
-        finally {
+        finally {//Fecho o recurso que eu abri
             DB.closeStatement(st);
         }
     }
 
     @Override
     public void update(Seller obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;//Declarar PreparedStatement e começar com null.
+        try { //Começar o try montanto o Statement
+            st = conn.prepareStatement(
+                    "UPDATE seller "
+                    + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                    + "WHERE Id = ?");
+            
+            //Configurar os ? do SQL Query dos obj
+            st.setString(1, obj.getName());
+            st.setString(2, obj.getEmail());
+            st.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));//Java sql e não util
+            st.setDouble(4, obj.getBaseSalary());
+            st.setInt(5, obj.getDepartment().getId());
+            st.setInt(6, obj.getId());            
+            
+            st.executeUpdate();//fazer esse comando para executar a query. Não preciso verificar as linhas afetadas.
+                    
+        } catch (SQLException e) {//Se aconteceu alguma exceção, lanço a minha exceção personalizada.
+            throw new DbException(e.getMessage());
+        }
+        finally {//Fecho o recurso que eu abri
+            DB.closeStatement(st);
+        }
     }
 
     @Override
