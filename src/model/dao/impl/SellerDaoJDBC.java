@@ -70,7 +70,49 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public List<Seller> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement(
+                    //Buscar os vendedores, dado um departamento.
+                    "SELECT seller.*,department.Name as DepName "//SELECT Todos os dados do vendedor, mais o nome do departamento, dando o apelido de DepName.
+                    + "FROM seller INNER JOIN department " 
+                    + "ON seller.DepartmentId = DepartmentId "
+                    + "ORDER BY Name");//Ordena o resultado por nome.                
+                       
+            rs = st.executeQuery();//Executo a minha query
+            
+            List<Seller> list = new ArrayList<>();//Declarada a lista para ter os resultados.
+            Map<Integer, Department> map = new HashMap<>();//Esse map vai controlar a não repetição de departamento. Declaro o map, a chave vai ser um Integer referente ao Id, e o valor de cada objeto, vai ser do tipo deparmento. Aí instancio usando o new hashMap. Feito isso, criei uma estrutura map vazia.
+            
+            //O meu resultado pode ter mais de 2 valores. Por isso usamos um while para percorrer a lista enquanto tiver um proximo (next).
+            while (rs.next()) {//Pra cada valor do resultset, preciso declarar um departamento, um vendedor e depois adicionar o valor na lista usando o list.add(obj);
+                
+                //Primeiro vou verificar se o departamento existe.
+                Department dep = map.get(rs.getInt("DepartmentId")); //Declaro dep, recebendo map.get e vou passar o valor da chave buscando o map, o Id do depatamento que estiver no resultSet. O id vai ser rs.getInt e vou passar o nome da coluna "DepartmentId".
+                
+                //Explicando o que foi feito. Criei um map vazio, e vou guardar dentro desse map qualquer departamento que eu instanciar. E cada vez que passar no while, preciso testar se o departamento já existe. Faço isso indo no map e tento buscar com o método get um departamento que tenha o "departmentId" na coluna do banco dados. Caso não exista, esse map.get vai retornar nullo. Se for nullo ai sim vou instanciar o departamento.
+                
+                //vou incluir um teste com if
+                
+                if (dep == null) {//Se o dep for igual a nullo, significa que ele não existia ainda.
+                    dep = instantiateDepartment(rs);//Nesse caso, mando instanciar o meu departamento, a partir do resultSet
+                    map.put(rs.getInt("DepartmentId"), dep);//Agora eu vou salvar esse departamento dentro no meu map, para que na próxima vez, eu possa verificar na coluna e ver que já existe. O valor da chave de map.put vai ser rs.getInt("DepartmentId"), e o departamento vai ser o que estiver na variavel dep.
+                }
+                                
+                Seller obj = instantiateSeller(rs, dep);//Instancio o vendedor apontando para o dep
+                list.add(obj);
+                //Resumo com esse código, vou ter um departamento com varios vendedores apontando para ele e não varios departamentos.
+            }
+            return list; //Quando tiver esgotado todo o resultSet do while, já vou ter adicionado todoas a minha lista e vou retornar essa lista.          
+        } 
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+        DB.closeStatement(st);
+        DB.closeResultSet(rs);        
+        }
     }
 
     private Department instantiateDepartment(ResultSet rs) throws SQLException {
@@ -134,8 +176,10 @@ public class SellerDaoJDBC implements SellerDao {
         catch (SQLException e) {
             throw new DbException(e.getMessage());
         }
-        
-        
+        finally {
+        DB.closeStatement(st);
+        DB.closeResultSet(rs);        
+        }
     }
 
 }

@@ -26,6 +26,12 @@ public class Program {
         for (Seller obj : list) {//Pra cada Seller obj, na minha lista list...
             System.out.println(obj);//mando imprimir obj
         }
+        
+        System.out.println("\n=== Test 3: seller findAll ====");
+        list = sellerDao.findAll();//Declaro list de Seller chamando ela de list e essa lista vai receber o sellerDao.findAll.
+        for (Seller obj : list) {//Pra cada Seller obj, na minha lista list...
+            System.out.println(obj);//mando imprimir obj
+        }
     }
     
 }
