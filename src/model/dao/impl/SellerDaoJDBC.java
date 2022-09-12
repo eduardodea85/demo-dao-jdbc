@@ -93,7 +93,24 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void deleteById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;//Inicio começando com o PreparedStatement com valor nulo.
+        try {//Abro o bloco try.
+            st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");//Instancio o st, recebendo o conn.prepareStatement com o comando SQL dentro.
+            
+            st.setInt(1, id);//Configurar o valor do placeholder que é o "?". 
+            
+            int rows = st.executeUpdate();//Chamar o execute para exevutar. Vou aproveitar e verificar se há alguma linha que não existe na hora de apagar. Se existir, trate a exceção;
+            
+            if (rows == 0) {
+                throw new DbException("Esse código não existe! ");
+            }
+        } 
+        catch (SQLException e) {//Se acontecer alguma exceção...
+            throw new DbException(e.getMessage());//Lanço a exceção personalizada DBException.
+        }
+        finally {
+            DB.closeStatement(st);//Finalizo com finally para fechar o Statement.
+        }
     }
 
     @Override

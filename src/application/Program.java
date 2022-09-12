@@ -2,6 +2,7 @@ package application;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.Department;
@@ -10,6 +11,8 @@ import model.entities.Seller;
 public class Program {
     
     public static void main(String[] args) {
+        
+        Scanner sc = new Scanner(System.in);
 
         //Department obj = new Department(1, "Books");
         //System.out.println(obj);
@@ -34,16 +37,24 @@ public class Program {
             System.out.println(obj);//mando imprimir obj
         }
         
-        System.out.println("\n=== Test 4: seller insert ====");
-        Seller newSeller = new Seller(null, "Greg", "greg@gmail.com", new Date(), 4000.0, department);//Criar um novo objeto declarando os dados do vendedor. obs: O departamento posso aproveitar o objeto declarado acima, não precisa ter nome, somente tendo o id já é suficiente. 
-        sellerDao.insert(newSeller);//chamada para inserir no banco de dados.
-        System.out.println("Inserted! New id = " + newSeller.getId());//imprimir o resultado colocando o newSeller pra ver se ele trouxe o Id de volta.
+        //System.out.println("\n=== Test 4: seller insert ====");
+        //Seller newSeller = new Seller(null, "Greg", "greg@gmail.com", new Date(), 4000.0, department);//Criar um novo objeto declarando os dados do vendedor. obs: O departamento posso aproveitar o objeto declarado acima, não precisa ter nome, somente tendo o id já é suficiente. 
+        //sellerDao.insert(newSeller);//chamada para inserir no banco de dados.
+        //System.out.println("Inserted! New id = " + newSeller.getId());//imprimir o resultado colocando o newSeller pra ver se ele trouxe o Id de volta.
         
         System.out.println("\n=== Test 5: seller update ====");
         seller = sellerDao.findById(1);//Pegar a variavel seller que já existe e fazer ela receber o sellerDao.findById procurando o Id do vendedor 1. Carrego os dados do vendedor 1, nesse objeto seller.
         seller.setName("Martha Waine");//A partir do meu objeto seller, vou setar um novo nome para o vendedor 1. 
         sellerDao.update(seller);//Agora salvo esse vendedor Martha, atualizando o nome dele. Cahamdno o comando update passando o objeto seller.
         System.out.println("Update completed");
+        
+        System.out.println("\n=== Test 6: seller delete ====");
+        System.out.print("Enter id for delete test: ");
+        int id = sc.nextInt();
+        sellerDao.deleteById(id);
+        System.out.println("Delete comppleted");
+        
+        sc.close();
         
     }
     
