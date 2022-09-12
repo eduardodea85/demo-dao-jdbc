@@ -2,6 +2,7 @@ package model.dao;
 
 import db.DB;
 import model.dao.impl.SellerDaoJDBC;
+import model.dao.impl.DepartmentDaoJDBC;
 
 public class DaoFactory {
     
@@ -13,15 +14,11 @@ public class DaoFactory {
     //No meu programa principal, eu posso acrescentar uma instanciação de um SellerDao, sem precisar dar o new SellerDaoJDBC. Eu simplismente vou chamar a fabrica DaoFactory.createSellerDao();
     //Dessa forma o meu programa não conhece a implementação. Ele conhece somente a interface.
     //É também uma forma de fazer uma injeção de dependência sem explicitar a implementação.
+    
+    public static DepartmentDao createDepartmentDao() {
+        return new DepartmentDaoJDBC(DB.getConnection());
+    }
+    
 }
 
 
-/*
-
-
-
-
-
-
-
-*/

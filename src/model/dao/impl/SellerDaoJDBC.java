@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import model.dao.SellerDao;
 import model.entities.Department;
-import model.entities.Seller;
 
 import model.entities.Seller;
 
